@@ -33,7 +33,7 @@ class dersler(QMainWindow, QDialog , QMenu, QRectF, QTextDocument, QPushButton):
 
 
         self.ui.pushButton.clicked.connect(self.Return)
-
+         #burası dönüştürme fonksiyonunu çalışıtran buton 
         self.ui.soundBox.clicked.connect(self.text_start)
 
         self.ui.soundBox.clicked.connect(self.browseSound)
@@ -90,17 +90,18 @@ class dersler(QMainWindow, QDialog , QMenu, QRectF, QTextDocument, QPushButton):
     def text_start(self):
         
             self.ui.label.setText('{}...'.format(self.convert))
-
+            #burada convert başladığı anda kullanıcıya bilgi text gönderiyoruz
 
 
     def text_finish(self):
         self.ui.label.setText('{}...'.format(self.done))
+#bu kısımda da dillere göre ön yüzdeki diller ayarlanıyor
     def set_Turkce(self):
         self.ui.pushButton.setText("Dönüştür")
         self.ui.textBrowser.setText("Dönüştürmek istediğiniz ses dosyasını seçiniz")
         self.ui.textBrowser_2.setText("Oluşturacağınız yazı dosyasnın yerini ve adını seçiniz")
         self.ui.label.setText("Bekleniyor...")
-        self.lg="tr"
+        self.lg="tr"  #lg ile birlikte goople api'ye hangi dilde çevirme yapacağımızı yazıyoruz
         self.convert = "dönüşüm için hazırlanıyor"
         self.done = "Tamamlandı"
     def set_English(self):
@@ -108,7 +109,7 @@ class dersler(QMainWindow, QDialog , QMenu, QRectF, QTextDocument, QPushButton):
         self.ui.textBrowser.setText("Please select the audio file what will convert")
         self.ui.textBrowser_2.setText("Please select the where of the text file it will create")
         self.ui.label.setText("Waiting...")
-        self.lg="en"
+        self.lg="en" #lg ile birlikte goople api'ye hangi dilde çevirme yapacağımızı yazıyoruz
         self.convert = "readying for converting"
         self.done="Completed"
     def set_Francais(self):
@@ -116,7 +117,7 @@ class dersler(QMainWindow, QDialog , QMenu, QRectF, QTextDocument, QPushButton):
             self.ui.textBrowser.setText("Veuillez sélectionner le fichier audio qui sera converti")
             self.ui.textBrowser_2.setText("Veuillez sélectionner l'emplacement du fichier texte qu'il va créer")
             self.ui.label.setText("Attendre...")
-            self.lg="fr"
+            self.lg="fr" #lg ile birlikte goople api'ye hangi dilde çevirme yapacağımızı yazıyoruz
             self.convert = "prêt pour la conversion"
             self.done="Complété"
     def set_Deutsch(self):
@@ -124,7 +125,7 @@ class dersler(QMainWindow, QDialog , QMenu, QRectF, QTextDocument, QPushButton):
             self.ui.textBrowser.setText("Bitte wählen Sie die Audiodatei aus, die konvertiert werden solli")
             self.ui.textBrowser_2.setText("Bitte wählen Sie den Ort der Textdatei aus, die erstellt werden soll")
             self.ui.label.setText("das Warten...")
-            self.lg="de"
+            self.lg="de" #lg ile birlikte goople api'ye hangi dilde çevirme yapacağımızı yazıyoruz
             self.convert="bereit für die Konvertierung"
             self.done="Vollendet"
     def browseSound(self):
@@ -134,14 +135,14 @@ class dersler(QMainWindow, QDialog , QMenu, QRectF, QTextDocument, QPushButton):
         head_tail=os.path.split(self.fname[0])
         self.path = str(head_tail[0])
         print(self.path)
-
+      #ses dosyasının formatını buluyoruz
         self.x = str(self.fname[0].split('.')[-1])
         print(self.x)
         self.ft = str(self.fname[0].split('.')[0])
         print(self.ft)
         self.y = str(self.fname[0].split('/')[-1])
         print(self.y)
-
+     
 
 
 
@@ -164,7 +165,7 @@ class dersler(QMainWindow, QDialog , QMenu, QRectF, QTextDocument, QPushButton):
         else:
             print("Yanlış format seçtiniz")
         sound = AudioSegment.from_wav(self.path1)
-        # split audio sound where silence is 700 miliseconds or more and get chunks
+        # ses dosyalarını burada sessizlik süresine göre parçalıyoruz
         chunks = split_on_silence(sound,
                                   # experiment with this value for your target audio file
                                   min_silence_len=500,
@@ -176,11 +177,12 @@ class dersler(QMainWindow, QDialog , QMenu, QRectF, QTextDocument, QPushButton):
 
         folder_name = self.path + "/audio-chunks"
         print(folder_name)
-        # create a directory to store the audio chunks
+        # burada eğer belirtilen dosya yoksa dosya oluşturuyoruz
         if not os.path.isdir(folder_name):
             os.mkdir(folder_name)
 
-        whole_text = ""
+        whole_text = ""   
+      #başlangıçtaki whole text değerini "" veriyoruz
 
 
         for i, audio_chunk in enumerate(chunks, start=1):
@@ -196,7 +198,7 @@ class dersler(QMainWindow, QDialog , QMenu, QRectF, QTextDocument, QPushButton):
                 audio = r.record(source)
 
                 try:
-                    text = r.recognize_google(audio, language=self.lg)
+                    text = r.recognize_google(audio, language=self.lg) #lg ile birlikte goople api'ye hangi dilde çevirme yapacağımızı yazıyoruz
                 except sr.UnknownValueError as e:
                     print("Error:", str(e))
                 else:
@@ -208,7 +210,7 @@ class dersler(QMainWindow, QDialog , QMenu, QRectF, QTextDocument, QPushButton):
 
 
         fileList = glob.glob(folder_name + '/*.wav', recursive=True)
-
+    
         for filePath in fileList:
             try:
                 os.remove(filePath)
@@ -227,7 +229,7 @@ class dersler(QMainWindow, QDialog , QMenu, QRectF, QTextDocument, QPushButton):
 
 
     def Return(self):
-
+    #bu fonksiyonda ses dosyası formatlarını wav formatına dönüştürüyoruz
         if self.x == "wav":
 
             self.long()
